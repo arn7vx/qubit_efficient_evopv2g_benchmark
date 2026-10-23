@@ -1,0 +1,106 @@
+{
+  "experiment": {
+    "name": "evop_pce_calibration_transfer",
+    "sizes": [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
+    "instance_file": "final_instances.json",
+    "output_directory": "results/main_track"
+  },
+  "development_instances": {
+    "6": "C05_S01_2",
+    "7": "C05_S02_2",
+    "8": "C05_S03_2",
+    "9": "C06_S03_2",
+    "10": "C07_S03_2",
+    "11": "C07_S04_2",
+    "12": "C08_S04_2",
+    "13": "C09_S04_2",
+    "14": "C09_S05_2",
+    "15": "C10_S05_2",
+    "16": "C11_S05_2",
+    "17": "C12_S05_2",
+    "18": "C13_S05_2"
+  },
+  "development_selection_note": "Fixed before final evaluation: normal-profile (_2) instance with station count closest to N/3, giving a roughly 2:1 customer-to-station composition where the catalogue permits it. This preserves C07_S04_2 at N=11.",
+  "pce": {
+    "compression_orders": [2, 3, 4],
+    "alpha": [20.0, 40.0, 60.0],
+    "beta": [0.0, 0.4, 0.8],
+    "gamma": [1.0, 4.0, 16.0],
+    "regularisation_scale": 1.0,
+    "robust_decoding_margin": 0.05,
+    "pad_gap_weight": 0.05
+  },
+  "penalty_shapes": {
+    "balanced": {
+      "customer_repeat": 1.0,
+      "battery": 1.0,
+      "station_count": 1.0
+    },
+    "repeat_heavy": {
+      "customer_repeat": 1.5,
+      "battery": 0.75,
+      "station_count": 0.75
+    },
+    "battery_heavy": {
+      "customer_repeat": 0.75,
+      "battery": 1.5,
+      "station_count": 0.75
+    },
+    "station_heavy": {
+      "customer_repeat": 0.75,
+      "battery": 0.75,
+      "station_count": 1.5
+    }
+  },
+  "controllers": {
+    "differential_evolution": {
+      "strategy": "best1bin",
+      "popsize_multiplier": 2,
+      "mutation": [0.5, 1.0],
+      "recombination": 0.7,
+      "tolerance": 0.01,
+      "initial_population": "latinhypercube",
+      "polish": false
+    },
+    "spsa": {
+      "calibration_c": 0.2,
+      "target_magnitude": 0.6283185307179586,
+      "blocking": false,
+      "trust_region": false,
+      "resamplings": 1,
+      "second_order": false
+    }
+  },
+  "calibration": {
+    "seeds": [1, 2, 3, 4, 5],
+    "budget_multiplier_p": 15
+  },
+  "selection": {
+    "feasibility_gate": "maximum_feasible_seed_count",
+    "quality_weight": 0.75,
+    "stability_weight": 0.25,
+    "quality_metric": "median_optimum_ratio",
+    "stability_metric": "median_absolute_deviation_of_optimum_ratio"
+  },
+  "transfer": {
+    "seeds": [6, 7, 8, 9, 10, 11, 12, 13, 14, 15],
+    "budget_multiplier_p": 15,
+    "all_other_same_n_instances": true,
+    "retuning": false
+  },
+  "parallel": {
+    "default_workers": 8,
+    "job_order_seed": 20260909,
+    "blas_threads_per_worker": 1
+  },
+  "benchmark": {
+    "sizes": [6, 7, 8, 9, 10, 11, 12, 13, 14, 15, 16, 17, 18],
+    "seed": 991,
+    "budget_multiplier_p": 2,
+    "alpha": 40.0,
+    "beta": 0.4,
+    "gamma": 4.0,
+    "penalty_shape": "balanced",
+    "output_directory": "results/benchmark"
+  }
+}
